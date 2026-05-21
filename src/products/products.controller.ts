@@ -49,7 +49,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(
     @Param('lojaId', ParseIntPipe) lojaId: number,
     @Param('id', ParseIntPipe) id: number,
