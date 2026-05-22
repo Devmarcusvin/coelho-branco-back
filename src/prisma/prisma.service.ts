@@ -3,7 +3,7 @@ import { PrismaClient } from '../../generated/prisma/client';
 
 @Injectable()
 export class PrismaService
-  extends PrismaClient
+  extends PrismaClient 
   implements OnModuleInit, OnModuleDestroy
 {
   async onModuleInit() {
