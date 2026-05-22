@@ -8,5 +8,5 @@ import { ProductsModule } from './products/products.module';
   imports: [PrismaModule, ProductsModule],
   controllers: [AppController],
   providers: [AppService],
-})
+}) 
 export class AppModule {}
