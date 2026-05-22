@@ -46,7 +46,6 @@ export class ProductsService {
     });
   }
 
-  // US28 / RF36 — remover produto da loja
   async remove(lojaId: number, id: number) {
     await this.findOne(lojaId, id);
 
