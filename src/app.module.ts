@@ -6,6 +6,8 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ProductsModule } from './products/products.module';
 import { AvaliacoesProdutoModule } from './avaliacoes-produto/avaliacoes-produto.module';
 import { AvaliacoesLojaModule } from './avaliacoes-loja/avaliacoes-loja.module';
+import { CategoriasModule } from './categorias/categorias.module';
+import { LojasModule } from './lojas/lojas.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { AvaliacoesLojaModule } from './avaliacoes-loja/avaliacoes-loja.module';
     ProductsModule,
     AvaliacoesProdutoModule,
     AvaliacoesLojaModule,
+    CategoriasModule,
+    LojasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
