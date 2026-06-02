@@ -1,58 +1,63 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
+export interface Product {
+  id: number;
+  loja_id: number;
+  nome: string;
+  descricao?: string;
+  preco: number;
+  estoque: number;
+  categoria_id: number;
+  createdAt: Date;
+}
+
 @Injectable()
 export class ProductsService {
-  constructor(private readonly prisma: PrismaService) {}
+  private produtos: Product[] = [];
+  private nextId = 1;
 
-  async create(lojaId: number, dto: CreateProductDto) {
-    return this.prisma.produtos.create({
-      data: {
-        ...dto,
-        loja_id: lojaId,
-      },
-    });
+  create(lojaId: number, dto: CreateProductDto) {
+    const produto: Product = {
+      id: this.nextId++,
+      loja_id: lojaId,
+      createdAt: new Date(),
+      ...dto,
+    };
+    this.produtos.push(produto);
+    return produto;
   }
 
-  async findAll(lojaId: number) {
-    return this.prisma.produtos.findMany({
-      where: { loja_id: lojaId },
-      orderBy: { createdAt: 'desc' },
-      include: { imagens: true, categoria: true },
-    });
+  findAll(lojaId: number) {
+    return this.produtos
+      .filter((p) => p.loja_id === lojaId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 
-  async findOne(lojaId: number, id: number) {
-    const product = await this.prisma.produtos.findFirst({
-      where: { id, loja_id: lojaId },
-      include: { imagens: true, categoria: true },
-    });
+  findOne(lojaId: number, id: number) {
+    const produto = this.produtos.find(
+      (p) => p.id === id && p.loja_id === lojaId,
+    );
 
-    if (!product) {
+    if (!produto) {
       throw new NotFoundException(`Produto ${id} não encontrado.`);
     }
 
-    return product;
+    return produto;
   }
 
-  async update(lojaId: number, id: number, dto: UpdateProductDto) {
-    await this.findOne(lojaId, id);
-
-    return this.prisma.produtos.update({
-      where: { id },
-      data: dto,
-    });
+  update(lojaId: number, id: number, dto: UpdateProductDto) {
+    const produto = this.findOne(lojaId, id);
+    Object.assign(produto, dto);
+    return produto;
   }
 
-  async remove(lojaId: number, id: number) {
-    await this.findOne(lojaId, id);
-
-    await this.prisma.produtos.delete({
-      where: { id },
-    });
-
+  remove(lojaId: number, id: number) {
+    this.findOne(lojaId, id);
+    this.produtos = this.produtos.filter(
+      (p) => !(p.id === id && p.loja_id === lojaId),
+    );
     return { message: 'Produto removido da loja com sucesso.' };
   }
 }
