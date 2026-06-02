@@ -1,73 +1,44 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateAvaliacaoLojaDto } from './dto/create-avaliacao-loja.dto';
 import { UpdateAvaliacaoLojaDto } from './dto/update-avaliacao-loja.dto';
 
-export interface AvaliacaoLoja {
-  id: number;
-  usuario_id: number;
-  loja_id: number;
-  nota: number;
-  comentario?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 @Injectable()
 export class AvaliacoesLojaService {
-  private avaliacoes: AvaliacaoLoja[] = [];
+  constructor(private prisma: PrismaService) {}
 
-  private nextId = 1;
-
-  create(lojaId: number, dto: CreateAvaliacaoLojaDto): AvaliacaoLoja {
-    const novaAvaliacao: AvaliacaoLoja = {
-      id: this.nextId++,
-      loja_id: lojaId,
-      ...dto,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    this.avaliacoes.push(novaAvaliacao);
-    return novaAvaliacao;
+  create(lojaId: number, dto: CreateAvaliacaoLojaDto) {
+    return this.prisma.avaliacoes_loja.create({
+      data: { loja_id: lojaId, ...dto },
+    });
   }
 
-  findAll(lojaId: number): AvaliacaoLoja[] {
-    return this.avaliacoes
-      .filter((a) => a.loja_id === lojaId)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  findAll(lojaId: number) {
+    return this.prisma.avaliacoes_loja.findMany({
+      where: { loja_id: lojaId },
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
-  findOne(lojaId: number, id: number): AvaliacaoLoja {
-    const avaliacao = this.avaliacoes.find(
-      (a) => a.id === id && a.loja_id === lojaId,
-    );
-
-    if (!avaliacao) {
-      throw new NotFoundException(`Avaliação ${id} não encontrada.`);
-    }
-
+  async findOne(lojaId: number, id: number) {
+    const avaliacao = await this.prisma.avaliacoes_loja.findFirst({
+      where: { id, loja_id: lojaId },
+    });
+    if (!avaliacao) throw new NotFoundException(`Avaliação ${id} não encontrada.`);
     return avaliacao;
   }
 
-  update(
-    lojaId: number,
-    id: number,
-    dto: UpdateAvaliacaoLojaDto,
-  ): AvaliacaoLoja {
-    const avaliacao = this.findOne(lojaId, id);
-
-    Object.assign(avaliacao, dto, { updatedAt: new Date() });
-
-    return avaliacao;
+  async update(lojaId: number, id: number, dto: UpdateAvaliacaoLojaDto) {
+    await this.findOne(lojaId, id);
+    return this.prisma.avaliacoes_loja.update({
+      where: { id },
+      data: dto,
+    });
   }
 
-  remove(lojaId: number, id: number): { message: string } {
-    this.findOne(lojaId, id);
-
-    this.avaliacoes = this.avaliacoes.filter(
-      (a) => !(a.id === id && a.loja_id === lojaId),
-    );
-
+  async remove(lojaId: number, id: number) {
+    await this.findOne(lojaId, id);
+    await this.prisma.avaliacoes_loja.delete({ where: { id } });
     return { message: 'Avaliação da loja removida com sucesso.' };
   }
 }
