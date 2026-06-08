@@ -8,6 +8,7 @@ import { AvaliacoesProdutoModule } from './avaliacoes-produto/avaliacoes-produto
 import { AvaliacoesLojaModule } from './avaliacoes-loja/avaliacoes-loja.module';
 import { CategoriasModule } from './categorias/categorias.module';
 import { LojasModule } from './lojas/lojas.module';
+import { UsersModule } from './users/users.module'
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { LojasModule } from './lojas/lojas.module';
     AvaliacoesLojaModule,
     CategoriasModule,
     LojasModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
