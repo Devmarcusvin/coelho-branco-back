@@ -7,9 +7,9 @@ import { UpdateAvaliacaoLojaDto } from './dto/update-avaliacao-loja.dto';
 export class AvaliacoesLojaService {
   constructor(private prisma: PrismaService) {}
 
-  create(lojaId: number, dto: CreateAvaliacaoLojaDto) {
+  create(lojaId: number, dto: CreateAvaliacaoLojaDto, usuario_id: number) {
     return this.prisma.avaliacoes_loja.create({
-      data: { loja_id: lojaId, ...dto },
+      data: { loja_id: lojaId, usuario_id: usuario_id, ...dto },
     });
   }
 

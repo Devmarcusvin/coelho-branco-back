@@ -1,16 +1,20 @@
 import { Controller, Get, Post, Put, Body, Patch, Param, Delete } from '@nestjs/common';
 import { LojasService } from './lojas.service';
 import { CreateLojaDto } from './dto/create-loja.dto';
+import {Public} from "../auth/decorators/isPublic.decorator";
+import { UserPayload } from '../auth/types/UserPayload';
+import { CurrentUser } from '../auth/decorators/CurrentUser.decorator';
 
 @Controller('lojas')
 export class LojasController {
   constructor(private readonly lojasService: LojasService) {}
 
   @Post('create')
-  create(@Body() data: CreateLojaDto) {
-    return this.lojasService.create(data);
+  create(@Body() data: CreateLojaDto, @CurrentUser() currentUser: UserPayload) {
+    return this.lojasService.create(data, currentUser.sub);
   }
 
+  @Public()
   @Get()
   async findAll(){
     return this.lojasService.findAll();
@@ -26,6 +30,7 @@ export class LojasController {
     return this.lojasService.delete(Number(id));
   }
 
+  @Public()
   @Get(':id')
   async findOne(@Param('id') id:number){
     return this.lojasService.findOne(Number(id));

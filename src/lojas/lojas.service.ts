@@ -4,13 +4,15 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class LojasService {
-  constructor(private prisma: PrismaService){}
-  
-  async create(data: CreateLojaDto) {
-    const loja = await this.prisma.lojas.create ({
-      data
-    })
-    return loja;
+  constructor(private prisma: PrismaService) { }
+
+  async create(data: CreateLojaDto, usuarioId: number) {
+    return this.prisma.lojas.create({
+      data: {
+        ...data,
+        usuario_id: usuarioId,
+      },
+    });
   }
 
 
@@ -18,36 +20,36 @@ export class LojasService {
     return this.prisma.lojas.findMany();
   }
 
-  async update(id: number, data: CreateLojaDto){
+  async update(id: number, data: CreateLojaDto) {
     const lojaexists = await this.prisma.lojas.findUnique({
-      where: {id}
+      where: { id }
     });
-    if(!lojaexists){
+    if (!lojaexists) {
       throw new Error("Loja não encontrada");
     }
     return await this.prisma.lojas.update({
       data,
-      where: {id}
+      where: { id }
     });
   }
 
-  async delete(id: number){
+  async delete(id: number) {
     const lojaexists = await this.prisma.lojas.findUnique({
-      where: {id}
+      where: { id }
     });
-    if(!lojaexists){
+    if (!lojaexists) {
       throw new Error("Loja não encontrada");
     }
     return await this.prisma.lojas.delete({
-      where: {id}
+      where: { id }
     });
   }
 
-  async findOne(id: number){
+  async findOne(id: number) {
     const lojaexists = await this.prisma.lojas.findUnique({
-      where: {id}
+      where: { id }
     });
-    if(!lojaexists){
+    if (!lojaexists) {
       throw new Error("Loja não encontrada");
     }
     return lojaexists;

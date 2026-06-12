@@ -7,11 +7,16 @@ import { UpdateAvaliacaoProdutoDto } from './dto/update-avaliacao-produto.dto';
 export class AvaliacoesProdutoService {
   constructor(private prisma: PrismaService) {}
 
-  create(produtoId: number, dto: CreateAvaliacaoProdutoDto) {
-    return this.prisma.avaliacoes_produto.create({
-      data: { produto_id: produtoId, ...dto },
-    });
-  }
+  create(produtoId: number, dto: CreateAvaliacaoProdutoDto, usuarioId: number) {
+  return this.prisma.avaliacoes_produto.create({
+    data: {
+      produto_id: produtoId,
+      usuario_id: usuarioId,
+      nota: dto.nota,
+      comentario: dto.comentario,
+    },
+  });
+}
 
   findAll(produtoId: number) {
     return this.prisma.avaliacoes_produto.findMany({

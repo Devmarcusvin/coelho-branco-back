@@ -1,22 +1,12 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Delete,
-  Body,
-  Param,
-  ParseIntPipe,
-  HttpCode,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, ParseIntPipe, HttpCode, HttpStatus, } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Public } from "../auth/decorators/isPublic.decorator";
 
 @Controller('lojas/:lojaId/produtos')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
 
   @Post()
   create(
@@ -26,11 +16,13 @@ export class ProductsController {
     return this.productsService.create(lojaId, dto);
   }
 
+  @Public()
   @Get()
   findAll(@Param('lojaId', ParseIntPipe) lojaId: number) {
     return this.productsService.findAll(lojaId);
   }
 
+  @Public()
   @Get(':id')
   findOne(
     @Param('lojaId', ParseIntPipe) lojaId: number,
