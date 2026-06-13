@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
  
-export class CreateProductDto {
+export class CreateProdutosDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)

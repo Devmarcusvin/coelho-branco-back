@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
-import { ProductsModule } from './products/products.module';
+import { ProdutosModule } from './produtos/produtos.module';
 import { AvaliacoesProdutoModule } from './avaliacoes-produto/avaliacoes-produto.module';
 import { AvaliacoesLojaModule } from './avaliacoes-loja/avaliacoes-loja.module';
 import { CategoriasModule } from './categorias/categorias.module';
@@ -14,7 +14,7 @@ import { UsersModule } from './users/users.module'
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
-    ProductsModule,
+    ProdutosModule,
     AvaliacoesProdutoModule,
     AvaliacoesLojaModule,
     CategoriasModule,
