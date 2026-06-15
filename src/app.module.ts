@@ -9,6 +9,7 @@ import { AvaliacoesLojaModule } from './avaliacoes-loja/avaliacoes-loja.module';
 import { CategoriasModule } from './categorias/categorias.module';
 import { LojasModule } from './lojas/lojas.module';
 import { UsersModule } from './users/users.module'
+import { ComentariosAvaliacaoModule } from './comentarios_avaliacao/comentarios_avaliacao.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UsersModule } from './users/users.module'
     CategoriasModule,
     LojasModule,
     UsersModule,
+    ComentariosAvaliacaoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
