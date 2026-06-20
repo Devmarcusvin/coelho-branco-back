@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Put, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CategoriasService } from './categorias.service';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
+import {Public} from "../auth/decorators/isPublic.decorator";
 
 @Controller('categorias')
 export class CategoriasController {
@@ -11,6 +12,7 @@ export class CategoriasController {
     return this.categoriasService.create(data);
   }
 
+  @Public()
   @Get()
   async findAll() {
     return this.categoriasService.findAll();
@@ -21,7 +23,7 @@ export class CategoriasController {
       return this.categoriasService.update(Number(id), data);
     }
 
-
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.categoriasService.findOne(Number(id));

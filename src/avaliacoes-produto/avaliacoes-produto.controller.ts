@@ -9,10 +9,14 @@ import {
   ParseIntPipe,
   HttpCode,
   HttpStatus,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AvaliacoesProdutoService } from './avaliacoes-produto.service';
 import { CreateAvaliacaoProdutoDto } from './dto/create-avaliacao-produto.dto';
 import { UpdateAvaliacaoProdutoDto } from './dto/update-avaliacao-produto.dto';
+import { Public } from "../auth/decorators/isPublic.decorator";
+import { CurrentUser } from '../auth/decorators/CurrentUser.decorator';
+import { UserPayload } from '../auth/types/UserPayload';
 
 @Controller('produtos/:produtoId/avaliacoes')
 export class AvaliacoesProdutoController {
@@ -20,19 +24,22 @@ export class AvaliacoesProdutoController {
     private readonly avaliacoesProdutoService: AvaliacoesProdutoService,
   ) {}
 
-  @Post()
-  create(
-    @Param('produtoId', ParseIntPipe) produtoId: number,
-    @Body() dto: CreateAvaliacaoProdutoDto,
-  ) {
-    return this.avaliacoesProdutoService.create(produtoId, dto);
-  }
+@Post()
+create(
+  @Param('produtoId', ParseIntPipe) produtoId: number,
+  @Body() dto: CreateAvaliacaoProdutoDto,
+  @CurrentUser() currentUser: UserPayload,
+) {
+  return this.avaliacoesProdutoService.create(produtoId, dto, currentUser.sub);
+}
 
+  @Public()
   @Get()
   findAll(@Param('produtoId', ParseIntPipe) produtoId: number) {
     return this.avaliacoesProdutoService.findAll(produtoId);
   }
 
+  @Public()
   @Get(':id')
   findOne(
     @Param('produtoId', ParseIntPipe) produtoId: number,

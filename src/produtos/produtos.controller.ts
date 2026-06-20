@@ -10,42 +10,45 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { ProdutosService } from './produtos.service';
+import { CreateProdutosDto } from './dto/create-produtos.dto';
+import { UpdateProdutosDto } from './dto/update-produtos.dto';
+import {Public} from "../auth/decorators/isPublic.decorator";
 
 @Controller('lojas/:lojaId/produtos')
-export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+export class ProdutosController {
+  constructor(private readonly produtosService: ProdutosService) {}
 
   @Post()
   create(
     @Param('lojaId', ParseIntPipe) lojaId: number,
-    @Body() dto: CreateProductDto,
+    @Body() dto: CreateProdutosDto,
   ) {
-    return this.productsService.create(lojaId, dto);
+    return this.produtosService.create(lojaId, dto);
   }
 
+  @Public()
   @Get()
   findAll(@Param('lojaId', ParseIntPipe) lojaId: number) {
-    return this.productsService.findAll(lojaId);
+    return this.produtosService.findAll(lojaId);
   }
 
+  @Public()
   @Get(':id')
   findOne(
     @Param('lojaId', ParseIntPipe) lojaId: number,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.productsService.findOne(lojaId, id);
+    return this.produtosService.findOne(lojaId, id);
   }
 
   @Patch(':id')
   update(
     @Param('lojaId', ParseIntPipe) lojaId: number,
     @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateProductDto,
+    @Body() dto: UpdateProdutosDto,
   ) {
-    return this.productsService.update(lojaId, id, dto);
+    return this.produtosService.update(lojaId, id, dto);
   }
 
   @Delete(':id')
@@ -54,6 +57,6 @@ export class ProductsController {
     @Param('lojaId', ParseIntPipe) lojaId: number,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.productsService.remove(lojaId, id);
+    return this.produtosService.remove(lojaId, id);
   }
 }
