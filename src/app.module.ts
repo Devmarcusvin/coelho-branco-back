@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
-import { ProductsModule } from './products/products.module';
+import { ProdutosModule } from './produtos/produtos.module';
 import { AvaliacoesProdutoModule } from './avaliacoes-produto/avaliacoes-produto.module';
 import { AvaliacoesLojaModule } from './avaliacoes-loja/avaliacoes-loja.module';
 import { CategoriasModule } from './categorias/categorias.module';
@@ -13,12 +13,14 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/guards/auth-guard';
 import { JwtModule } from '@nestjs/jwt';
+import { ComentariosAvaliacaoModule } from './comentarios_avaliacao/comentarios_avaliacao.module';
+import { ImagensProdutoModule } from './imagens_produto/imagens_produto.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
-    ProductsModule,
+    ProdutosModule,
     AvaliacoesProdutoModule,
     AvaliacoesLojaModule,
     CategoriasModule,
@@ -26,7 +28,9 @@ import { JwtModule } from '@nestjs/jwt';
     UsersModule,
     AuthModule,
     JwtModule,
-    AuthModule
+    AuthModule,
+    ComentariosAvaliacaoModule,
+    ImagensProdutoModule,
   ],
   controllers: [AppController],
   providers: [AppService, 
