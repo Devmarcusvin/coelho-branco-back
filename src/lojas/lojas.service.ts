@@ -52,4 +52,22 @@ export class LojasService {
     }
     return lojaexists;
   }
+
+  //encontra a loja pela categoria dela baseada nos produtos que vende
+  findByCategoria(categoriaId: number) {
+  return this.prisma.lojas.findMany({
+    where: {
+      produtos: {
+        some: {
+          categoria_id: categoriaId,
+        },
+      },
+    },
+    include: {
+      produtos: {
+        where: { categoria_id: categoriaId },
+      },
+    },
+  });
+}
 }

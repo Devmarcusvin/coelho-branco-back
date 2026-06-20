@@ -10,6 +10,7 @@ import { CategoriasModule } from './categorias/categorias.module';
 import { LojasModule } from './lojas/lojas.module';
 import { UsersModule } from './users/users.module'
 import { ComentariosAvaliacaoModule } from './comentarios_avaliacao/comentarios_avaliacao.module';
+import { ImagensProdutoModule } from './imagens_produto/imagens_produto.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ComentariosAvaliacaoModule } from './comentarios_avaliacao/comentarios_
     LojasModule,
     UsersModule,
     ComentariosAvaliacaoModule,
+    ImagensProdutoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

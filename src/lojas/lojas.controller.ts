@@ -4,7 +4,7 @@ import { CreateLojaDto } from './dto/create-loja.dto';
 
 @Controller('lojas')
 export class LojasController {
-  constructor(private readonly lojasService: LojasService) {}
+  constructor(private readonly lojasService: LojasService) { }
 
   @Post('create')
   create(@Body() data: CreateLojaDto) {
@@ -12,22 +12,27 @@ export class LojasController {
   }
 
   @Get()
-  async findAll(){
+  async findAll() {
     return this.lojasService.findAll();
   }
-  
+
   @Put(':id')
-  async update(@Param('id') id: number, @Body() data: CreateLojaDto){
+  async update(@Param('id') id: number, @Body() data: CreateLojaDto) {
     return this.lojasService.update(Number(id), data);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id:number){
+  async delete(@Param('id') id: number) {
     return this.lojasService.delete(Number(id));
   }
 
   @Get(':id')
-  async findOne(@Param('id') id:number){
+  async findOne(@Param('id') id: number) {
     return this.lojasService.findOne(Number(id));
+  }
+
+  @Get('categoria/:categoriaId')
+  findByCategoria(@Param('categoriaId') categoriaId: string) {
+    return this.lojasService.findByCategoria(+categoriaId);
   }
 }
