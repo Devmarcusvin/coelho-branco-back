@@ -35,6 +35,22 @@ async update(id: number, dto: UpdateImagensProdutoDto){
   });
 }
 
+async findByUsuario(usuarioId: number) {
+  return this.prisma.imagens_produto.findMany({
+    where: {
+      produto: {
+        loja: {
+          usuario_id: usuarioId,
+        },
+      },
+    },
+    orderBy: { ordem: 'asc' },
+    include: {
+      produto: { select: { id: true, nome: true, loja_id: true } },
+    },
+  });
+}
+
   async remove(id: number){
     await this.findOne(id);
     await this.prisma.imagens_produto.delete({where: { id}});
