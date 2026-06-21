@@ -14,32 +14,67 @@ export class ProdutosService {
   }
 
   findAll(lojaId: number) {
-  return this.prisma.produtos.findMany({
-    where: { loja_id: lojaId },
-    orderBy: { createdAt: 'desc' },
-    include: {
-      imagens: { orderBy: { ordem: 'asc' }, take: 1 },
-      loja: { select: { logo_url: true } },
-    },
-  });
-}
+    return this.prisma.produtos.findMany({
+      where: { loja_id: lojaId },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        imagens: { orderBy: { ordem: 'asc' }, take: 1 },
+        loja: { select: { logo_url: true } },
+      },
+    });
+  }
+
+  async findAllByCategoria(categoria?: string) {
+    if (!categoria) {
+      return this.prisma.produtos.findMany({
+        orderBy: { createdAt: 'desc' },
+        include: {
+          imagens: { orderBy: { ordem: 'asc' }, take: 1 },
+          loja: { select: { logo_url: true } },
+          categoria: true,
+        },
+      });
+    }
+
+    const categoriaPai = await this.prisma.categorias.findFirst({
+      where: { nome: { equals: categoria, mode: 'insensitive' } },
+    });
+
+    if (!categoriaPai) return [];
+
+    const subcategorias = await this.prisma.categorias.findMany({
+      where: { categoria_pai_id: categoriaPai.id },
+    });
+
+    const todosIds = [categoriaPai.id, ...subcategorias.map((s) => s.id)];
+
+    return this.prisma.produtos.findMany({
+      where: { categoria_id: { in: todosIds } },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        imagens: { orderBy: { ordem: 'asc' }, take: 1 },
+        loja: { select: { logo_url: true } },
+        categoria: true,
+      },
+    });
+  }
 
   async findOne(lojaId: number, id: number) {
-  const produto = await this.prisma.produtos.findFirst({
-    where: { id, loja_id: lojaId },
-    include: {
-      imagens: { orderBy: { ordem: 'asc' } },
-      avaliacoes: {
-        orderBy: { createdAt: 'desc' },
-        include: { usuario: true },
+    const produto = await this.prisma.produtos.findFirst({
+      where: { id, loja_id: lojaId },
+      include: {
+        imagens: { orderBy: { ordem: 'asc' } },
+        avaliacoes: {
+          orderBy: { createdAt: 'desc' },
+          include: { usuario: true },
+        },
+        categoria: true,
+        loja: true,
       },
-      categoria: true,
-      loja: true,
-    },
-  });
-  if (!produto) throw new NotFoundException(`Produto ${id} não encontrado.`);
-  return produto;
-}
+    });
+    if (!produto) throw new NotFoundException(`Produto ${id} não encontrado.`);
+    return produto;
+  }
 
   async update(lojaId: number, id: number, dto: UpdateProdutosDto) {
     await this.findOne(lojaId, id);
