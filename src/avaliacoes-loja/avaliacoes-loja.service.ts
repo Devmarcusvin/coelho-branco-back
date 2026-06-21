@@ -5,7 +5,7 @@ import { UpdateAvaliacaoLojaDto } from './dto/update-avaliacao-loja.dto';
 
 @Injectable()
 export class AvaliacoesLojaService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   create(lojaId: number, dto: CreateAvaliacaoLojaDto, usuario_id: number) {
     return this.prisma.avaliacoes_loja.create({
@@ -17,6 +17,9 @@ export class AvaliacoesLojaService {
     return this.prisma.avaliacoes_loja.findMany({
       where: { loja_id: lojaId },
       orderBy: { createdAt: 'desc' },
+      include: {
+        usuario: { select: { nome: true, foto_perfil_url: true } },
+      },
     });
   }
 
