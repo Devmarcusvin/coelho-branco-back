@@ -7,8 +7,8 @@ async function bootstrap() {
     origin: 'http://localhost:3000', 
     credentials: true,
   });
-  await app.listen(process.env.PORT ?? 3001);
-
+  app.use(require('express').json({ limit: '10mb' }));
+  app.use(require('express').urlencoded({ limit: '10mb', extended: true }));
+  await app.listen(process.env.PORT ?? 3333);
 }
 bootstrap();
-

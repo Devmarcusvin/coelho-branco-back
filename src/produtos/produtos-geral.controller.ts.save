@@ -1,0 +1,14 @@
+import { Controller, Get } from '@nestjs/common';
+import { ProdutosService } from './produtos.service';
+import { Public } from '../auth/decorators/isPublic.decorator';
+
+@Controller('produtos')
+export class ProdutosGeralController {
+  constructor(private readonly produtosService: ProdutosService) {}
+
+  @Public()
+  @Get()
+  findAll() {
+    return this.produtosService.findAllGeral();
+  }
+}
