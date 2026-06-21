@@ -13,11 +13,11 @@ import {
 import { ProdutosService } from './produtos.service';
 import { CreateProdutosDto } from './dto/create-produtos.dto';
 import { UpdateProdutosDto } from './dto/update-produtos.dto';
-import {Public} from "../auth/decorators/isPublic.decorator";
+import { Public } from "../auth/decorators/isPublic.decorator";
 
 @Controller('lojas/:lojaId/produtos')
 export class ProdutosController {
-  constructor(private readonly produtosService: ProdutosService) {}
+  constructor(private readonly produtosService: ProdutosService) { }
 
   @Post()
   create(
@@ -58,5 +58,11 @@ export class ProdutosController {
     @Param('id', ParseIntPipe) id: number,
   ) {
     return this.produtosService.remove(lojaId, id);
+  }
+
+  @Public()
+  @Get('/categoria/:nome')
+  findByCategoria(@Param('nome') nome: string) {
+    return this.produtosService.findByCategoria(nome);
   }
 }

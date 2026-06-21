@@ -54,4 +54,23 @@ export class ProdutosService {
     await this.prisma.produtos.delete({ where: { id } });
     return { message: 'Produto removido da loja com sucesso.' };
   }
+
+  async findByCategoria(nomeCategoria: string) {
+  const categoria = await this.prisma.categorias.findFirst({
+    where: { nome: { equals: nomeCategoria, mode: 'insensitive' } },
+    include: { subcategorias: true },
+  });
+
+  if (!categoria) return [];
+
+  const categoriaIds = [categoria.id, ...categoria.subcategorias.map((s) => s.id)];
+
+  return this.prisma.produtos.findMany({
+    where: { categoria_id: { in: categoriaIds } },
+    include: {
+      imagens: { orderBy: { ordem: 'asc' }, take: 1 },
+      loja: { select: { logo_url: true } },
+    },
+  });
+}
 }
