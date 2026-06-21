@@ -9,6 +9,6 @@ async function bootstrap() {
   });
   app.use(require('express').json({ limit: '10mb' }));
   app.use(require('express').urlencoded({ limit: '10mb', extended: true }));
-  await app.listen(process.env.PORT ?? 3333);
+  await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();
